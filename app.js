@@ -8,3 +8,8 @@ dotenv.config();
 goerliTrxnStatus()
 // optimismTrxnStatus()
 // celoTrxnStatus()
+
+//example for running the script every 15 mins using cron
+//cron.schedule('*/15 * * * *', () => {
+//     goerliTrxnStatus()
+// });
