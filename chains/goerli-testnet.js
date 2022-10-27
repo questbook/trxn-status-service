@@ -2,7 +2,6 @@ import axios from "axios";
 import { load } from "js-yaml";
 import Web3 from "web3";
 import dotenv from "dotenv";
-import cron from 'node-cron';
 import workspaceRegistryAbi from "../abi/WorkspaceRegistry.json" assert { type: "json" };
 import { getTokenUSDonDate, getRealmTransactionHashStatus} from "../safe/realms.js";
 import coinGeckoId from "../constants/coinGeckoId.json" assert { type: "json" };
@@ -21,9 +20,6 @@ const SUBGRAPH_URL = `https://the-graph.questbook.app/subgraphs/name/qb-subgraph
 const goerliTrxnStatus = async () => {
     const fundsTransfersData = await getFundTransferData();
     let queuedTransfers =  fundsTransfersData.filter((txn) => txn.status === "queued");
-
-    console.log('queuedTransfers', queuedTransfers.length);
-    
     let execuetedTxns = [];
 
     await Promise.all(queuedTransfers.map(async (transfer) => {
@@ -53,7 +49,7 @@ const goerliTrxnStatus = async () => {
                             transactionHash,
                             tokenUsdValue,
                             tokenName,
-                            executionTimeStamp:new Date(executionTimeStamp).getTime()
+                            executionTimeStamp:Math.round(new Date(executionTimeStamp).getTime()/1000)
                         })
                     })
                 }
@@ -77,7 +73,7 @@ const goerliTrxnStatus = async () => {
                             transactionHash,
                             tokenUsdValue,
                             tokenName,
-                            executionTimeStamp:new Date(executionTimeStamp).getTime()
+                            executionTimeStamp:Math.round(new Date(executionTimeStamp).getTime()/1000)
                         })
                     })
                     
@@ -89,7 +85,10 @@ const goerliTrxnStatus = async () => {
     })
     );
 
-    // const transactionHash = await updateStatusContractCall(execuetedTxns);
+    console.log("execuetedTxns on chain "+network, execuetedTxns);
+    if(execuetedTxns.length>0){
+        const transactionHash = await updateStatusContractCall(execuetedTxns);
+    }
 }
 
 const getFundTransferData = async () => {
@@ -125,8 +124,6 @@ const getFundTransferData = async () => {
 }
 
 const updateStatusContractCall = async (execuetedTxns) => {
-    console.log("execuetedTxns", execuetedTxns);
-
     const web3 = new Web3(goerliRpcUrl);
     const networkId = await web3.eth.net.getId();
     const account = web3.eth.accounts.privateKeyToAccount(privateKey);

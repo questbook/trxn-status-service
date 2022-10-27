@@ -1,11 +1,14 @@
 import axios from "axios";
 import { load } from "js-yaml";
 import Web3 from "web3";
-import cron from 'node-cron';
+import dotenv from "dotenv";
 import workspaceRegistryAbi from "../abi/WorkspaceRegistry.json" assert { type: "json" };
 import { getTokenUSDonDate, getRealmTransactionHashStatus} from "../safe/realms.js";
 import coinGeckoId from "../constants/coinGeckoId.json" assert { type: "json" };
 import { getCeloTokenUsdValue, getGnosisTokenUsdValue, getGnosisTransactionHashStatus } from "../safe/gnosis.js";
+import { getDateInDDMMYYYY, sleep } from "../utils.js";
+
+dotenv.config();
 
 const address = process.env.WALLET_PUBLIC_KEY;
 const privateKey = process.env.WALLET_PRIVATE_KEY;
@@ -21,6 +24,7 @@ const celoTrxnStatus = async () => {
     let execuetedTxns = [];
 
     await Promise.all(queuedTransfers.map(async (transfer) => {
+      try{
         const safeChainId =  transfer.grant.workspace.safe.chainId;
         const safeAddress = transfer.grant.workspace.safe.address;
         const transactionHash = transfer.transactionHash;
@@ -30,24 +34,34 @@ const celoTrxnStatus = async () => {
         );
         
         if (safeChainId === '42220'){
+            await sleep(200);
             const txnStatus = await getGnosisTransactionHashStatus(safeChainId, transactionHash);
             console.log("txnStatus", txnStatus);
             if(txnStatus.status == 1){
-                const tokenUsdValue = await getCeloTokenUsdValue(safeChainId, safeAddress, tokenName);
+              const executionTimeStamp = txnStatus.executionTimeStamp;
+              const tokenUsdValue = await getTokenUSDonDate(
+                                      coinGeckoId[tokenName?tokenName:"cusd"],
+                                      getDateInDDMMYYYY(executionTimeStamp));
                 console.log('tokenUsdValue', tokenUsdValue);
                 execuetedTxns.push({
                     applicationIds,
                     transactionHash,
                     tokenUsdValue,
                     tokenName,
-                    executionTimeStamp:txnStatus.executionTimeStamp
+                    executionTimeStamp:Math.round(new Date(executionTimeStamp).getTime()/1000)
                 })
             }
 
         }
+      }catch(err){
+        console.log("error", err.message);
+      }
     }))
 
-    const transactionHash = await updateStatusContractCall(execuetedTxns);
+    console.log("execuetedTxns on chain "+network, execuetedTxns);
+    if(execuetedTxns.length>0){
+      const transactionHash = await updateStatusContractCall(execuetedTxns);
+    }
 }
 
 const getFundTransferData = async () => {
@@ -83,9 +97,7 @@ const getFundTransferData = async () => {
 }
 
 const updateStatusContractCall = async (execuetedTxns) => {
-  console.log("execuetedTxns", execuetedTxns);
-
-  const web3 = new Web3(optimismRpcUrl);
+  const web3 = new Web3(celoRpcUrl);
   const networkId = await web3.eth.net.getId();
   const account = web3.eth.accounts.privateKeyToAccount(privateKey);
   const balance = await web3.eth.getBalance(account.address);

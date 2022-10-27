@@ -1,4 +1,7 @@
 {
     "usd coin": "usd-coin",
-    "sol":"solana"
+    "sol":"solana",
+    "cusd":"celo-dollar",
+    "ceuro":"celo-euro",
+    "tether":"tether"
 }
