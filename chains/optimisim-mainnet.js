@@ -18,7 +18,7 @@ const CHAINS_JSON_URL = "https://raw.githubusercontent.com/questbook/chains/main
 const SUBGRAPH_URL = `https://the-graph.questbook.app/subgraphs/name/qb-subgraph-${network}`;
 
 const optimismTrxnStatus = async () => {
-    const fundsTransfersData = await getFundTransferData();
+    const fundsTransfersData = await getFundTransferData(SUBGRAPH_URL);
     const queuedTransfers = fundsTransfersData.filter((transfer) => transfer.status === "queued");
     let execuetedTxns = [];
 
@@ -89,38 +89,6 @@ const optimismTrxnStatus = async () => {
     if(execuetedTxns.length>0){
         const transactionHash = await updateStatusContractCall(execuetedTxns);
     }
-}
-
-const getFundTransferData = async () => {
-    const data = await axios.post(SUBGRAPH_URL, {
-        query: `query MyQuery {
-            fundsTransfers {
-              executionTimestamp
-              transactionHash
-              tokenUSDValue
-              tokenName
-              status
-              grant {
-                workspace {
-                  safe {
-                    address
-                    chainId
-                  }
-                }
-                applications {
-                  id
-                }
-              }
-            }
-          }`,
-      }, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-
-    
-    return data.data.data.fundsTransfers;
 }
 
 const updateStatusContractCall = async (execuetedTxns) => {
