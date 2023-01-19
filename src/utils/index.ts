@@ -133,6 +133,8 @@ export const updateTransactionStatus = async (
   	rpcUrl,
   	execuetedTxns,
     );
+
+    console.log("update status transaction hash: ", transactionHash)
   }
 };
 
