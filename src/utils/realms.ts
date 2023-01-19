@@ -14,8 +14,7 @@ dotenv.config();
 const connection = new Connection(process.env.SOLANA_RPC_URL, "recent");
 const programId = new PublicKey('GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw');
 
-
-async function initialiseAllProposals(realmAddress) {
+async function initialiseAllProposals(realmAddress: string) {
     const realmData = await getRealm(connection, new PublicKey(realmAddress));
     const governances = await getGovernanceAccounts(connection, programId, Governance, [
         pubkeyFilter(1, new PublicKey(realmAddress) ),
@@ -28,7 +27,7 @@ async function initialiseAllProposals(realmAddress) {
     return proposals;
 }
 
-export async function getRealmTransactionHashStatus(realmAddress, proposalPublicKey) {
+export async function getRealmTransactionHashStatus(realmAddress: string, proposalPublicKey: string) {
     const allProposals = await initialiseAllProposals(realmAddress);
 
     const propsalsToSend = {};
@@ -36,14 +35,13 @@ export async function getRealmTransactionHashStatus(realmAddress, proposalPublic
     (allProposals
         ?.filter((proposal) => proposalPublicKey.includes(proposal.pubkey.toString())) || [])
         .map((proposal) => {
-            let executionTimeStamp = ''
+            let executionTimeStamp: Date
             if(proposal.account.state===5){
                 const closedAt = new Date((Number(proposal?.account?.closedAt?.toString()||''))*1000);
                 executionTimeStamp = closedAt;
             }
             
-            propsalsToSend[proposal.pubkey.toString()] = {status:proposal.account.state < 5 ? 0 : proposal.account.state === 5 ? 1 : 2, 
-                executionTimeStamp}
+            propsalsToSend[proposal.pubkey.toString()] = {status:proposal.account.state < 5 ? 0 : proposal.account.state === 5 ? 1 : 2, executionTimeStamp}
         })
     return propsalsToSend;
 }

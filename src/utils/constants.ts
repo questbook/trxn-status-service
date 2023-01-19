@@ -1,4 +1,12 @@
-{
+export const coinGeckoId = {
+    "usd coin": "usd-coin",
+    "sol":"solana",
+    "cusd":"celo-dollar",
+    "ceuro":"celo-euro",
+    "tether":"tether"
+}
+
+export const safeEndpoints = {
     "1": "https://safe-transaction.mainnet.gnosis.io/api/",
     "40": "https://transaction.safe.telos.net/api/",
     "100": "https://safe-transaction.xdai.gnosis.io/api/",
@@ -10,4 +18,10 @@
     "10": "https://safe-transaction.optimism.gnosis.io/api/",
     "137": "https://safe-transaction.polygon.gnosis.io/api/",
     "42220": "https://transaction-service.gnosis-safe-staging.celo-networks-dev.org/api/"
+}
+
+export const safeEndpointsTest = {
+    "4": "https://safe-transaction.rinkeby.gnosis.io/api/",
+    "5": "https://safe-transaction.goerli.gnosis.io/api/",
+    "73799": "https://safe-transaction.volta.gnosis.io/api/"
 }

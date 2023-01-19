@@ -1,3 +1,4 @@
 .env
+.build
 .serverless
 node_modules

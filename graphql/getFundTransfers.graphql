@@ -1,0 +1,20 @@
+query GetFundTransfers {
+  fundsTransfers(orderBy: createdAtS, orderDirection: desc, first: 10, where: {status: queued, type: funds_disbursed_from_safe}) {
+    executionTimestamp
+    transactionHash
+    tokenUSDValue
+    tokenName
+    status
+    application {
+      id
+    }
+    grant {
+      workspace {
+        safe {
+          address
+          chainId
+        }
+      }
+    }
+  }
+}
