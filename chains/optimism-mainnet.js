@@ -17,7 +17,7 @@ const network = "optimism-mainnet";
 const CHAINS_JSON_URL = "https://raw.githubusercontent.com/questbook/chains/main/chains/{{network}}.yaml";
 const SUBGRAPH_URL = `https://the-graph.questbook.app/subgraphs/name/qb-subgraph-${network}`;
 
-const optimismTrxnStatus = async () => {
+export const optimismTrxnStatus = async (event, context) => {
     const fundsTransfersData = await getFundTransferData(SUBGRAPH_URL);
     const queuedTransfers = fundsTransfersData.filter((transfer) => transfer.status === "queued");
     let execuetedTxns = [];
@@ -131,7 +131,4 @@ const updateStatusContractCall = async (execuetedTxns) => {
     console.log("transaction hash: ", receipt.transactionHash);
     return receipt.transactionHash;
 }
-
-export default optimismTrxnStatus;
-
 

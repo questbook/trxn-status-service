@@ -1,0 +1,49 @@
+org: richik
+app: trxn-status-service
+service: trxn-status-service
+
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  versionFunctions: false
+  stage: v1
+  region: ap-south-1
+  apiName: ${self:service}
+  memorySize: 256
+  logRetentionInDays: 14
+
+functions:
+  celo-mainnet:
+    handler: chains/celo-mainnet.celoTrxnStatus
+    timeout: 60
+    reservedConcurrency: 1
+    events:
+      - schedule: rate(5 minutes)
+
+  goerli-testnet:
+    handler: chains/goerli-testnet.goerliTrxnStatus
+    timeout: 60
+    reservedConcurrency: 1
+    events:
+      - schedule: rate(5 minutes)
+
+  polygon-mainnet:
+    handler: chains/polygon-mainnet.polygonTrxnStatus
+    timeout: 60
+    reservedConcurrency: 1
+    events:
+      - schedule: rate(5 minutes)
+
+  optimism-mainnet:
+    handler: chains/optimism-mainnet.optimismTrxnStatus
+    timeout: 60
+    reservedConcurrency: 1
+    events:
+      - schedule: rate(1 minute)
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin

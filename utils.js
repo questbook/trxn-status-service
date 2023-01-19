@@ -13,7 +13,7 @@ export function getDateInDDMMYYYY (date) {
 export const getFundTransferData = async (SUBGRAPH_URL) => {
   const data = await axios.post(SUBGRAPH_URL, {
       query: `query MyQuery {
-          fundsTransfers {
+          fundsTransfers(orderBy: createdAtS, orderDirection: desc, first: 20) {
             executionTimestamp
             transactionHash
             tokenUSDValue
