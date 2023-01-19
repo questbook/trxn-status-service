@@ -21,7 +21,7 @@ functions:
     timeout: 60
     reservedConcurrency: 1
     events:
-      - schedule: rate(5 minutes)
+      - schedule: rate(2 minutes)
 
   goerli-testnet:
     handler: chains/goerli-testnet.goerliTrxnStatus
@@ -35,14 +35,14 @@ functions:
     timeout: 60
     reservedConcurrency: 1
     events:
-      - schedule: rate(5 minutes)
+      - schedule: rate(2 minutes)
 
   optimism-mainnet:
     handler: chains/optimism-mainnet.optimismTrxnStatus
     timeout: 60
     reservedConcurrency: 1
     events:
-      - schedule: rate(1 minute)
+      - schedule: rate(2 minutes)
 
 plugins:
   - serverless-offline

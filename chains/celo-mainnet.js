@@ -17,7 +17,7 @@ const network = "celo-mainnet";
 const CHAINS_JSON_URL = "https://raw.githubusercontent.com/questbook/chains/main/chains/{{network}}.yaml";
 const SUBGRAPH_URL = `https://the-graph.questbook.app/subgraphs/name/qb-subgraph-${network}`;
 
-const celoTrxnStatus = async (event, context) => {
+export const celoTrxnStatus = async (event, context) => {
 
     const fundsTransfersData = await getFundTransferData(SUBGRAPH_URL);
     const queuedTransfers = fundsTransfersData.filter((transfer) => transfer.status === "queued");
@@ -104,7 +104,5 @@ const updateStatusContractCall = async (execuetedTxns) => {
   console.log("transaction hash: ", receipt.transactionHash);
   return receipt.transactionHash;
 }
-
-export default celoTrxnStatus;
 
 

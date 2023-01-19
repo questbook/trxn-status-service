@@ -17,7 +17,7 @@ const network = "polygon-mainnet";
 const CHAINS_JSON_URL = "https://raw.githubusercontent.com/questbook/chains/main/chains/{{network}}.yaml";
 const SUBGRAPH_URL = `https://the-graph.questbook.app/subgraphs/name/qb-subgraph-${network}`;
 
-const polygonTrxnStatus = async (event, context) => {
+export const polygonTrxnStatus = async (event, context) => {
     const fundsTransfersData = await getFundTransferData(SUBGRAPH_URL);
     let queuedTransfers =  fundsTransfersData.filter((txn) => txn.status === "queued");
     let execuetedTxns = [];
@@ -110,5 +110,3 @@ const updateStatusContractCall = async (execuetedTxns) => {
     console.log("transaction hash: ", receipt.transactionHash);
     return receipt.transactionHash;
 }
-
-export default polygonTrxnStatus;
