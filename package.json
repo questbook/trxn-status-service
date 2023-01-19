@@ -1,7 +1,7 @@
 {
   "name": "trxn-status-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "A recurring service that updates the state of transactions on a blockchain when they are updated externally",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,5 +20,9 @@
     "js-yaml": "^4.1.0",
     "node-cron": "^3.0.2",
     "web3": "^1.8.0"
+  },
+  "devDependencies": {
+    "serverless-dotenv-plugin": "^4.0.2",
+    "serverless-offline": "^12.0.4"
   }
 }
