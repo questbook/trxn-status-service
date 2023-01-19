@@ -1,10 +1,9 @@
 import axios from 'axios'
-import SAFES_ENDPOINTS_MAINNETS from '../constants/safesEndPoints.json' assert { type: "json" };
-import SAFES_ENDPOINTS_TESTNETS from '../constants/safesEndPointsTest.json' assert { type: "json" };
+import { safeEndpoints, safeEndpointsTest } from './constants'
 
-const SAFES_ENDPOINTS = { ...SAFES_ENDPOINTS_MAINNETS, ...SAFES_ENDPOINTS_TESTNETS }
+const SAFES_ENDPOINTS = { ...safeEndpoints, ...safeEndpointsTest }
 
-export async function getGnosisTokenUsdValue(safeNetworkId, safeAddress, tokenName) {
+export async function getGnosisTokenUsdValue(safeNetworkId: string, safeAddress: string, tokenName: string) {
 	const gnosisUrl = `${SAFES_ENDPOINTS[safeNetworkId]}v1/safes/${safeAddress}/balances/usd`
 	const response = await axios.get(gnosisUrl)
 
@@ -15,7 +14,7 @@ export async function getGnosisTokenUsdValue(safeNetworkId, safeAddress, tokenNa
 
 }
 
-export async function getCeloTokenUsdValue(safeNetworkId, safeAddress, tokenName) {
+export async function getCeloTokenUsdValue(safeNetworkId: string, safeAddress: string, tokenName: string) {
 	const gnosisUrl = `${SAFES_ENDPOINTS[safeNetworkId]}v1/safes/${safeAddress}/balances/usd`
 	const response = await axios.get(gnosisUrl)
 
@@ -26,8 +25,7 @@ export async function getCeloTokenUsdValue(safeNetworkId, safeAddress, tokenName
 
 }
 
-
-export async function getGnosisTransactionHashStatus(safeNetworkId, transactionHash) {
+export async function getGnosisTransactionHashStatus(safeNetworkId: string, transactionHash: string) {
 	const API_URL = `${SAFES_ENDPOINTS[safeNetworkId]}/v1/multisig-transactions/${transactionHash}/`
 	const response = await axios.get(API_URL)
 	const txnDetails = response.data

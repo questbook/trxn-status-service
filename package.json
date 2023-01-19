@@ -2,27 +2,43 @@
   "name": "trxn-status-service",
   "version": "1.0.0",
   "description": "A recurring service that updates the state of transactions on a blockchain when they are updated externally",
-  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate:typechain": "typechain --target ethers-v5 --out-dir src/generated/contracts src/abi/*.json",
+    "generate:graphql": "graphql-codegen --config codegen.yaml",
+    "generate": "npm run generate:graphql && npm run generate:typechain"
   },
-  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/client": "^3.5.10",
     "@solana/spl-governance": "^0.0.34",
     "@solana/spl-token": "^0.1.8",
     "@solana/spl-token-registry": "^0.2.4574",
     "@solana/web3.js": "^1.52.0",
-    "axios": "^1.1.3",
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.3",
+    "aws-lambda": "^1.0.7",
+    "axios": "^1.2.3",
     "dotenv": "^16.0.3",
+    "ethers": "^5.7.2",
     "express": "^4.18.2",
     "js-yaml": "^4.1.0",
     "node-cron": "^3.0.2",
-    "web3": "^1.8.0"
+    "react": "^18.1.0",
+    "web3": "^1.8.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/introspection": "^2.1.1",
+    "@graphql-codegen/typescript": "^2.4.11",
+    "@graphql-codegen/typescript-operations": "^2.4.0",
+    "@graphql-codegen/typescript-react-apollo": "^3.2.14",
+    "@typechain/ethers-v5": "^10.1.0",
+    "@types/aws-lambda": "^8.10.109",
     "serverless-dotenv-plugin": "^4.0.2",
-    "serverless-offline": "^12.0.4"
+    "serverless-offline": "^12.0.4",
+    "serverless-plugin-typescript": "^2.1.4",
+    "typechain": "^8.1.0",
+    "typescript": "^4.9.4"
   }
 }
