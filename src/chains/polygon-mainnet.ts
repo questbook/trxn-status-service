@@ -7,7 +7,7 @@ dotenv.config();
 
 const rpcUrl = process.env.POLYGON_RPC_URL;
 
-export const optimismTrxnStatus = async (
+export const polygonTrxnStatus = async (
     event: APIGatewayProxyEvent,
     context: Context,
   ) => {

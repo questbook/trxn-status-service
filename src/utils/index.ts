@@ -127,13 +127,13 @@ export const updateTransactionStatus = async (
     "executedTxns on chain " + CHAIN_INFO[chainId].name,
     execuetedTxns,
   );
-  if (execuetedTxns.length > 0) {
-    const transactionHash = await updateStatusContractCall(
-  	chainId,
-  	rpcUrl,
-  	execuetedTxns,
-    );
-  }
+//   if (execuetedTxns.length > 0) {
+//     const transactionHash = await updateStatusContractCall(
+//   	chainId,
+//   	rpcUrl,
+//   	execuetedTxns,
+//     );
+//   }
 };
 
 export const updateStatusContractCall = async (

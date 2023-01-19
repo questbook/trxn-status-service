@@ -21,28 +21,28 @@ functions:
     timeout: 60
     reservedConcurrency: 1
     events:
-      - schedule: rate(2 minutes)
+      - schedule: rate(5 minutes)
 
   goerli-testnet:
     handler: src/chains/goerli-testnet.goerliTrxnStatus
     timeout: 120
     reservedConcurrency: 1
     events:
-      - schedule: rate(2 minutes)
+      - schedule: rate(10 minutes)
 
   polygon-mainnet:
-    handler: chains/polygon-mainnet.polygonTrxnStatus
+    handler: src/chains/polygon-mainnet.polygonTrxnStatus
     timeout: 60
     reservedConcurrency: 1
     events:
-      - schedule: rate(2 minutes)
+      - schedule: rate(5 minutes)
 
   optimism-mainnet:
-    handler: chains/optimism-mainnet.optimismTrxnStatus
+    handler: src/chains/optimism-mainnet.optimismTrxnStatus
     timeout: 60
     reservedConcurrency: 1
     events:
-      - schedule: rate(2 minutes)
+      - schedule: rate(3 minutes)
 
 plugins:
   - serverless-plugin-typescript
