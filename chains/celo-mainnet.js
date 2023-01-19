@@ -6,7 +6,7 @@ import workspaceRegistryAbi from "../abi/WorkspaceRegistry.json" assert { type: 
 import { getTokenUSDonDate, getRealmTransactionHashStatus} from "../safe/realms.js";
 import coinGeckoId from "../constants/coinGeckoId.json" assert { type: "json" };
 import { getCeloTokenUsdValue, getGnosisTokenUsdValue, getGnosisTransactionHashStatus } from "../safe/gnosis.js";
-import { getDateInDDMMYYYY, sleep } from "../utils.js";
+import { getDateInDDMMYYYY, sleep, getFundTransferData } from "../utils.js";
 
 dotenv.config();
 

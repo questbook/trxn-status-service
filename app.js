@@ -7,16 +7,16 @@ import polygonTrxnStatus from "./chains/polygon-mainnet.js";
  
 dotenv.config();
 
-cron.schedule('*/15 * * * *', () => {
+cron.schedule('* * * * *', () => {
     goerliTrxnStatus()
 });
-cron.schedule('*/15 * * * *', () => {
+cron.schedule('* * * * *', () => {
     optimismTrxnStatus()
 });
-cron.schedule('*/15 * * * *', () => {
+cron.schedule('* * * * *', () => {
     celoTrxnStatus()
 });
-cron.schedule('*/15 * * * *', () => {
+cron.schedule('* * * * *', () => {
     polygonTrxnStatus()
 });
 //example for running the script every 15 mins using cron

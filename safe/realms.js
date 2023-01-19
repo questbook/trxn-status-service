@@ -16,19 +16,14 @@ const programId = new PublicKey('GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw');
 
 
 async function initialiseAllProposals(realmAddress) {
-    
     const realmData = await getRealm(connection, new PublicKey(realmAddress));
-
     const governances = await getGovernanceAccounts(connection, programId, Governance, [
         pubkeyFilter(1, new PublicKey(realmAddress) ),
     ]);
     const governance = governances.filter((gov)=>gov.pubkey.toString()===realmData.account.authority?.toString())[0];
-    
     const proposals = await getGovernanceAccounts(connection, programId, Proposal, [
                 pubkeyFilter(1, governance.pubkey),
     ]);
-
-   
 
     return proposals;
 }
