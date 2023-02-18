@@ -54,9 +54,9 @@ export const updateTransactionStatus = async (
       const safeAddress = transfer.grant.workspace.safe.address;
       const transactionHash = transfer.transactionHash;
       const tokenName = transfer.tokenName;
-	  const applicationId = transfer.application.id
+      const applicationId = transfer.application.id;
 
-	  await sleep(1000)
+      await sleep(1000);
       if (parseInt(safeChainId) === 900001) {
         const txnStatus = await getRealmTransactionHashStatus(
           safeAddress,
@@ -74,23 +74,25 @@ export const updateTransactionStatus = async (
             getDateInDDMMYYYY(executionTimeStamp),
           );
           console.log("tokenUsdValue", tokenUsdValue);
-		  execuetedTxns.push({
-			applicationId,
-			transactionHash,
-			tokenUsdValue,
-			tokenName,
-			executionTimeStamp: Math.round(
-			  new Date(executionTimeStamp).getTime() / 1000,
-			),
-		  });
+          execuetedTxns.push({
+            applicationId,
+            transactionHash,
+            tokenUsdValue,
+            tokenName,
+            executionTimeStamp: Math.round(
+              new Date(executionTimeStamp).getTime() / 1000,
+            ),
+            status: 'SUCCESS'
+          });
         }
       } else {
         const txnStatus = await getGnosisTransactionHashStatus(
           safeChainId,
+          safeAddress,
           transactionHash,
         );
         console.log("txnStatus", txnStatus);
-        if (txnStatus.status == 1 && txnStatus.executionTimeStamp) {
+        if (txnStatus.status == 1 || txnStatus.status === 2) {
           const executionTimeStamp = txnStatus.executionTimeStamp;
           let tokenUsdValue = 0;
           if (tokenName !== null) {
@@ -99,7 +101,7 @@ export const updateTransactionStatus = async (
               safeAddress,
               tokenName,
             );
-          } else {
+          } else if(executionTimeStamp !== null) {
             tokenUsdValue = await getTokenUSDonDate(
               coinGeckoId[defaultTokenName],
               getDateInDDMMYYYY(new Date(executionTimeStamp)),
@@ -108,14 +110,15 @@ export const updateTransactionStatus = async (
           console.log("tokenUsdValue-gnosis", tokenUsdValue);
 
           execuetedTxns.push({
-			applicationId,
-			transactionHash,
-			tokenUsdValue,
-			tokenName,
-			executionTimeStamp: Math.round(
-			  new Date(executionTimeStamp).getTime() / 1000,
-			),
-		  });
+            applicationId,
+            transactionHash,
+            tokenUsdValue,
+            tokenName,
+            executionTimeStamp: executionTimeStamp !== null ? Math.round(
+              new Date(executionTimeStamp).getTime() / 1000,
+            ) : executionTimeStamp,
+            status: txnStatus.status === 1 ? 'SUCCESS' : 'CANCELLED'
+          });
         }
       }
     } catch (err) {
@@ -129,12 +132,12 @@ export const updateTransactionStatus = async (
   );
   if (execuetedTxns.length > 0) {
     const transactionHash = await updateStatusContractCall(
-  	chainId,
-  	rpcUrl,
-  	execuetedTxns,
+      chainId,
+      rpcUrl,
+      execuetedTxns,
     );
 
-    console.log("update status transaction hash: ", transactionHash)
+    console.log("update status transaction hash: ", transactionHash);
   }
 };
 
@@ -146,8 +149,8 @@ export const updateStatusContractCall = async (
   const privateKey = process.env.WALLET_PRIVATE_KEY;
 
   if (!privateKey) {
-	console.error('Wallet address or private key not found')
-	return;
+    console.error("Wallet address or private key not found");
+    return;
   }
 
   const web3 = new Web3(rpcUrl);
@@ -167,10 +170,11 @@ export const updateStatusContractCall = async (
     await workspaceContract.methods.updateFundsTransferTransactionStatus(
       execuetedTxns.map((txn) => parseInt(txn.applicationId)),
       execuetedTxns.map((txn) => txn.transactionHash),
-      execuetedTxns.map(() => "executed"),
+      execuetedTxns.map((txn) => txn.status === 'SUCCESS' ? "executed" : 'cancelled'),
       execuetedTxns.map((txn) => Math.round(txn.tokenUsdValue)),
       execuetedTxns.map((txn) => txn.executionTimeStamp),
     );
+  console.log(trxn.arguments)
   const gas = await trxn.estimateGas({ from: address });
   const gasPrice = await web3.eth.getGasPrice();
   const data = trxn.encodeABI();

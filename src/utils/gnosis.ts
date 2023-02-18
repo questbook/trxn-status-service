@@ -25,12 +25,14 @@ export async function getCeloTokenUsdValue(safeNetworkId: string, safeAddress: s
 
 }
 
-export async function getGnosisTransactionHashStatus(safeNetworkId: string, transactionHash: string) {
-	const API_URL = `${SAFES_ENDPOINTS[safeNetworkId]}/v1/multisig-transactions/${transactionHash}/`
+export async function getGnosisTransactionHashStatus(safeNetworkId: string, safeAddress: string, transactionHash: string) {
+	const API_URL = `https://safe-client.safe.global/v1/chains/${safeNetworkId}/transactions/multisig_${safeAddress}_${transactionHash}/`
 	const response = await axios.get(API_URL)
 	const txnDetails = response.data
-	if(txnDetails.isExecuted) {
-		return {  status: 1, executionTimeStamp: txnDetails.executionDate }
+	console.log(txnDetails)
+	const now = Date.now()
+	if(txnDetails.txStatus == 'SUCCESS' || txnDetails.txStatus === 'CANCELLED') {
+		return {  status: txnDetails.txStatus === 'SUCCESS' ? 1 : 2, executionTimeStamp: txnDetails.txStatus === 'SUCCESS' ? txnDetails.executedAt : now }
 	} else {
 		return { status: 0,  executionTimeStamp: null}
 	}
