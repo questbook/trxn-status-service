@@ -175,7 +175,6 @@ export const updateStatusContractCall = async (
       execuetedTxns.map((txn) => txn.executionTimeStamp),
     );
   console.log(trxn.arguments)
-  return '';
   const gas = await trxn.estimateGas({ from: address });
   const gasPrice = await web3.eth.getGasPrice();
   const data = trxn.encodeABI();

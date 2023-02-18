@@ -31,8 +31,8 @@ export async function getGnosisTransactionHashStatus(safeNetworkId: string, safe
 	const txnDetails = response.data
 	console.log(txnDetails)
 	const now = Date.now()
-	if(txnDetails.txStatus !== 'AWAITING_EXECUTION') {
-		return {  status: txnDetails.txStatus === 'SUCCESS' ? 1 : txnDetails.txStatus === 'CANCELLED' ? 2 : 3, executionTimeStamp: txnDetails.txStatus === 'SUCCESS' ? txnDetails.executedAt : now }
+	if(txnDetails.txStatus == 'SUCCESS' || txnDetails.txStatus === 'CANCELLED') {
+		return {  status: txnDetails.txStatus === 'SUCCESS' ? 1 : 2, executionTimeStamp: txnDetails.txStatus === 'SUCCESS' ? txnDetails.executedAt : now }
 	} else {
 		return { status: 0,  executionTimeStamp: null}
 	}
