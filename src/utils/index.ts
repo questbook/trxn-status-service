@@ -170,11 +170,11 @@ export const updateStatusContractCall = async (
     await workspaceContract.methods.updateFundsTransferTransactionStatus(
       execuetedTxns.map((txn) => parseInt(txn.applicationId)),
       execuetedTxns.map((txn) => txn.transactionHash),
-      execuetedTxns.map((txn) =>  txn.status === 'SUCCESS' ? "executed" : 'cancelled'),
+      execuetedTxns.map((txn) => txn.status === 'SUCCESS' ? "executed" : 'cancelled'),
       execuetedTxns.map((txn) => Math.round(txn.tokenUsdValue)),
       execuetedTxns.map((txn) => txn.executionTimeStamp),
     );
-  console.log(trxn)
+  console.log(trxn.arguments)
   return '';
   const gas = await trxn.estimateGas({ from: address });
   const gasPrice = await web3.eth.getGasPrice();
