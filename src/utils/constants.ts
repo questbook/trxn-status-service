@@ -17,11 +17,13 @@ export const safeEndpoints = {
     "246": "https://safe-transaction.ewc.gnosis.io/api/",
     "10": "https://safe-transaction.optimism.gnosis.io/api/",
     "137": "https://safe-transaction.polygon.gnosis.io/api/",
-    "42220": "https://transaction-service.gnosis-safe-staging.celo-networks-dev.org/api/"
+    "42220": "https://transaction-service.gnosis-safe-staging.celo-networks-dev.org/api/",
+    "4689": "https://transaction.safe.iotex.io/api/"
 }
 
 export const safeEndpointsTest = {
     "4": "https://safe-transaction.rinkeby.gnosis.io/api/",
     "5": "https://safe-transaction.goerli.gnosis.io/api/",
-    "73799": "https://safe-transaction.volta.gnosis.io/api/"
+    "73799": "https://safe-transaction.volta.gnosis.io/api/",
+    "4690": "https://transaction-testnet.safe.iotex.io/api/"
 }

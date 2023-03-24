@@ -24,9 +24,6 @@ import { CHAIN_INFO } from './chains';
       fetchPolicy: 'network-only',
     });
     const { data } = response;
-    console.log({
-      chainId, data,
-    }, 'Executed query');
   
     return data;
   }

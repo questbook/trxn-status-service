@@ -46,7 +46,7 @@ export async function getRealmTransactionHashStatus(realmAddress: string, propos
     return propsalsToSend;
 }
 
-export async function getTokenUSDonDate(tokenName, date) {
+export async function getTokenUSDonDate(tokenName: string, date: string) {
     if (!date) return 0
 	let url = `https://api.coingecko.com/api/v3/coins/${tokenName}/history?date=${date}&localization=false`
 	let tokenUsdValue = parseFloat((await axios.get(url)).data?.market_data?.current_price?.usd)

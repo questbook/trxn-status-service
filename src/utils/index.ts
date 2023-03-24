@@ -41,7 +41,6 @@ export const updateTransactionStatus = async (
     chainId,
     GetFundTransfersDocument,
   );
-  console.log("fundsTransfersData", data);
 
   if (!data) return;
 
@@ -49,13 +48,12 @@ export const updateTransactionStatus = async (
   let execuetedTxns: ExecutedTransactionType[] = [];
 
   for (const transfer of fundsTransfersData) {
+    const safeChainId = transfer.grant.workspace.safe.chainId;
+    const safeAddress = transfer.grant.workspace.safe.address;
+    const transactionHash = transfer.transactionHash;
+    const tokenName = transfer.tokenName;
+    const applicationId = transfer.application.id;
     try {
-      const safeChainId = transfer.grant.workspace.safe.chainId;
-      const safeAddress = transfer.grant.workspace.safe.address;
-      const transactionHash = transfer.transactionHash;
-      const tokenName = transfer.tokenName;
-      const applicationId = transfer.application.id;
-
       await sleep(1000);
       if (parseInt(safeChainId) === 900001) {
         const txnStatus = await getRealmTransactionHashStatus(
@@ -91,7 +89,7 @@ export const updateTransactionStatus = async (
           safeAddress,
           transactionHash,
         );
-        console.log("txnStatus", txnStatus);
+        console.log("txnStatus", txnStatus, tokenName);
         if (txnStatus.status == 1 || txnStatus.status === 2) {
           const executionTimeStamp = txnStatus.executionTimeStamp;
           let tokenUsdValue = 0;
@@ -122,7 +120,7 @@ export const updateTransactionStatus = async (
         }
       }
     } catch (err) {
-      console.log("error", err.message);
+      console.log("error", err.message, {safeChainId, safeAddress, transactionHash, tokenName, applicationId});
     }
   }
 
