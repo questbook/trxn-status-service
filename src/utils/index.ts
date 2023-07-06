@@ -17,6 +17,7 @@ import {
   GetFundTransfersDocument,
   GetFundTransfersQuery,
 } from "../generated/graphql";
+import { getTONTransactionHashStatus } from "./ton";
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -55,6 +56,7 @@ export const updateTransactionStatus = async (
     const applicationId = transfer.application.id;
     try {
       await sleep(1000);
+      // solana
       if (parseInt(safeChainId) === 900001) {
         const txnStatus = await getRealmTransactionHashStatus(
           safeAddress,
@@ -83,7 +85,41 @@ export const updateTransactionStatus = async (
             status: 'SUCCESS'
           });
         }
-      } else {
+      } 
+      // ton
+      if(parseInt(safeChainId) === 512341 || parseInt(safeChainId) === 512342 || parseInt(safeChainId) === 3) {
+        const txnStatus = await getTONTransactionHashStatus(
+          safeChainId,
+          transactionHash,
+        );
+
+        console.log("ton - txnStatus", txnStatus, tokenName);
+
+        if (txnStatus.status == 1 || txnStatus.status === 2) {
+          const executionTimeStamp = txnStatus.executionTimeStamp;
+          let tokenUsdValue = 0;
+          if(executionTimeStamp !== null) {
+            tokenUsdValue = await getTokenUSDonDate(
+              coinGeckoId[tokenName],
+              getDateInDDMMYYYY(new Date(executionTimeStamp)),
+            );
+          }
+          console.log("tokenUsdValue-TON", tokenUsdValue);
+
+          execuetedTxns.push({
+            applicationId,
+            transactionHash,
+            tokenUsdValue,
+            tokenName,
+            executionTimeStamp: executionTimeStamp !== null ? Math.round(
+              new Date(executionTimeStamp).getTime() / 1000,
+            ) : executionTimeStamp,
+            status: txnStatus.status === 1 ? 'SUCCESS' : 'CANCELLED'
+          });
+        }
+      }
+      // evm
+      else {
         const txnStatus = await getGnosisTransactionHashStatus(
           safeChainId,
           safeAddress,

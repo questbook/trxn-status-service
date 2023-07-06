@@ -3,7 +3,8 @@ export const coinGeckoId = {
     "sol":"solana",
     "cusd":"celo-dollar",
     "ceuro":"celo-euro",
-    "tether":"tether"
+    "tether":"tether",
+    'the-open-network':'the-open-network', // TON
 }
 
 export const safeEndpoints = {
@@ -18,12 +19,16 @@ export const safeEndpoints = {
     "10": "https://safe-transaction.optimism.gnosis.io/api/",
     "137": "https://safe-transaction.polygon.gnosis.io/api/",
     "42220": "https://transaction-service.gnosis-safe-staging.celo-networks-dev.org/api/",
-    "4689": "https://transaction.safe.iotex.io/api/"
+    "4689": "https://transaction.safe.iotex.io/api/",
+    '512341': 'https://graphql.tonkey.app/graphql/' // TON mainnet
+    
 }
 
 export const safeEndpointsTest = {
     "4": "https://safe-transaction.rinkeby.gnosis.io/api/",
     "5": "https://safe-transaction.goerli.gnosis.io/api/",
     "73799": "https://safe-transaction.volta.gnosis.io/api/",
-    "4690": "https://transaction-testnet.safe.iotex.io/api/"
+    "4690": "https://transaction-testnet.safe.iotex.io/api/",
+    "512342": 'https://graphql.tonkey.app/graphql/', // TON testnet
+    "3": 'https://graphql.tonkey.app/graphql/' // TON testnet - dev
 }
