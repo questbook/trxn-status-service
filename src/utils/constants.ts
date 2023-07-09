@@ -4,6 +4,7 @@ export const coinGeckoId = {
     "cusd":"celo-dollar",
     "ceuro":"celo-euro",
     "tether":"tether",
+    'ton':'the-open-network',
     'TON':'the-open-network', // TON
     'the-open-network':'the-open-network', // TON
 }
