@@ -50,7 +50,11 @@ export async function getTokenUSDonDate(tokenName: string, date: string) {
     if (!date) return 0
 	let url = `https://api.coingecko.com/api/v3/coins/${tokenName}/history?date=${date}&localization=false`
 	let tokenUsdValue = parseFloat((await axios.get(url)).data?.market_data?.current_price?.usd)
-	
+    if (!tokenUsdValue){
+        url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenName}&vs_currencies=usd`
+        tokenUsdValue = parseFloat((await axios.get(url)).data[tokenName].usd)
+    }
+    console.log(tokenUsdValue)
 	return tokenUsdValue;
 }
 

@@ -85,9 +85,9 @@ export const updateTransactionStatus = async (
             status: 'SUCCESS'
           });
         }
-      } 
+      }
       // ton
-      if(parseInt(safeChainId) === 512341 || parseInt(safeChainId) === 512342 || parseInt(safeChainId) === 3) {
+      if (parseInt(safeChainId) === 512341 || parseInt(safeChainId) === 512342 || parseInt(safeChainId) === 3) {
         const txnStatus = await getTONTransactionHashStatus(
           safeChainId,
           transactionHash,
@@ -98,7 +98,7 @@ export const updateTransactionStatus = async (
         if (txnStatus.status == 1 || txnStatus.status === 2) {
           const executionTimeStamp = txnStatus.executionTimeStamp;
           let tokenUsdValue = 0;
-          if(executionTimeStamp !== null) {
+          if (executionTimeStamp !== null) {
             tokenUsdValue = await getTokenUSDonDate(
               coinGeckoId[tokenName],
               getDateInDDMMYYYY(new Date(executionTimeStamp)),
@@ -135,7 +135,7 @@ export const updateTransactionStatus = async (
               safeAddress,
               tokenName,
             );
-          } else if(executionTimeStamp !== null) {
+          } else if (executionTimeStamp !== null) {
             tokenUsdValue = await getTokenUSDonDate(
               coinGeckoId[defaultTokenName],
               getDateInDDMMYYYY(new Date(executionTimeStamp)),
@@ -156,7 +156,7 @@ export const updateTransactionStatus = async (
         }
       }
     } catch (err) {
-      console.log("error", err.message, {safeChainId, safeAddress, transactionHash, tokenName, applicationId});
+      console.log("error", err.message, { safeChainId, safeAddress, transactionHash, tokenName, applicationId });
     }
   }
 
