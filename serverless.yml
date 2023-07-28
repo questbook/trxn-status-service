@@ -1,5 +1,5 @@
-org: richik
-app: trxn-status-service
+# org: richik
+# app: trxn-status-service
 service: trxn-status-service
 
 frameworkVersion: '3'
@@ -16,26 +16,12 @@ provider:
   logRetentionInDays: 14
 
 functions:
-  celo-mainnet:
-    handler: src/chains/celo-mainnet.celoTrxnStatus
-    timeout: 60
-    reservedConcurrency: 1
-    events:
-      - schedule: rate(5 minutes)
-
   goerli-testnet:
     handler: src/chains/goerli-testnet.goerliTrxnStatus
     timeout: 120
     reservedConcurrency: 1
     events:
       - schedule: rate(10 minutes)
-
-  polygon-mainnet:
-    handler: src/chains/polygon-mainnet.polygonTrxnStatus
-    timeout: 60
-    reservedConcurrency: 1
-    events:
-      - schedule: rate(5 minutes)
 
   optimism-mainnet:
     handler: src/chains/optimism-mainnet.optimismTrxnStatus
