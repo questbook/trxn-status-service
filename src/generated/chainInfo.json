@@ -26,33 +26,5 @@
 			"communication": "0x8Bba6EFc1060512Ed7d03262bEC0D2E351B1963B",
 			"utility": "0xa80A1586ad7F1A00a784EB32DAF2244d4136eB35"
 		}
-	},
-	"137": {
-		"id": 137,
-		"name": "Polygon Mainnet",
-		"isTestNetwork": false,
-		"subgraphClientUrl": "https://the-graph.questbook.app/subgraphs/name/qb-subgraph-polygon-mainnet",
-		"qbContracts": {
-			"workspace": "0x168A72b08FCFF48192E0B1A27486f4394a4F86e1",
-			"applications": "0xE9d6c045232b7f4C07C151f368E747EBE46209E4",
-			"grantFactory": "0xC6b6356FBdcf6CC6EA4Cb90Cd11B7E3c5848F312",
-			"reviews": "0xdC5EbC9130a2e7Ad776E3503fa6Dcf16D80ca915",
-			"communication": "0x3d5302a9c37dEC7B800E08c6E24FC89E0A239840",
-			"utility": "0xd3FcaabBa4ce2664b17e83FeFf0DD3767B88FA2F"
-		}
-	},
-	"42220": {
-		"id": 42220,
-		"name": "Celo Mainnet",
-		"isTestNetwork": false,
-		"subgraphClientUrl": "https://the-graph.questbook.app/subgraphs/name/qb-subgraph-celo-mainnet",
-		"qbContracts": {
-			"applications": "0x32798CC9da06363eF2b0eE12e54cD4476D9C891a",
-			"workspace": "0x6D0f81BDA11995f25921aAd5B43359630E65Ca96",
-			"grantFactory": "0xda717ab1206c59493e1E5c66F4e0712B39EC6D81",
-			"reviews": "0x2d49a247AA77cA433218C9567953645bE04A7b3A",
-			"communication": "0x27aB1a33E95cF08Bd9807f9a59BB62ae76827E34",
-			"utility": "0xF796985d9a2BF187af5512EACAa8177A8c077B61"
-		}
 	}
 }
