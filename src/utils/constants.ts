@@ -8,19 +8,17 @@ export const coinGeckoId = {
     'TON':'the-open-network', // TON
     'the-open-network':'the-open-network', // TON
 }
-
+// reference: https://docs.safe.global/safe-core-api/available-services
 export const safeEndpoints = {
-    "1": "https://safe-transaction.mainnet.gnosis.io/api/",
+    "1": "https://safe-transaction-mainnet.safe.global/api/",
     "40": "https://transaction.safe.telos.net/api/",
-    "100": "https://safe-transaction.xdai.gnosis.io/api/",
-    "42161": "https://safe-transaction.arbitrum.gnosis.io/api/",
-    "43114": "https://safe-transaction.avalanche.gnosis.io/api/",
-    "1313161554": "https://safe-transaction.aurora.gnosis.io/api/",
-    "56": "https://safe-transaction.bsc.gnosis.io/api/",
-    "246": "https://safe-transaction.ewc.gnosis.io/api/",
-    "10": "https://safe-transaction.optimism.gnosis.io/api/",
-    "137": "https://safe-transaction.polygon.gnosis.io/api/",
-    "42220": "https://transaction-service.gnosis-safe-staging.celo-networks-dev.org/api/",
+    "42161": "https://safe-transaction-arbitrum.safe.global/api/",
+    "43114": "https://safe-transaction-avalanche.safe.global/api/",
+    "1313161554": "https://safe-transaction-aurora.safe.global/api/",
+    "56": "https://safe-transaction-bsc.safe.global/api/",
+    "10": "https://safe-transaction-optimism.safe.global/api/",
+    "137": "https://safe-transaction-polygon.safe.global/api/",
+    "42220": "https://safe-transaction-aurora.safe.global/api/",
     "4689": "https://transaction.safe.iotex.io/api/",
     '512341': 'https://graphql.tonkey.app/graphql/' // TON mainnet
     
