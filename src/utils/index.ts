@@ -88,6 +88,8 @@ export const updateTransactionStatus = async (
       }
       // ton
       if (parseInt(safeChainId) === 512341 || parseInt(safeChainId) === 512342 || parseInt(safeChainId) === 3) {
+        let isWalletTransaction = transactionHash.startsWith('9988734.') === true
+
         const txnStatus = await getTONTransactionHashStatus(
           safeChainId,
           transactionHash,
@@ -95,9 +97,14 @@ export const updateTransactionStatus = async (
 
         console.log("ton - txnStatus", txnStatus, tokenName);
 
-        if (txnStatus.status == 1 || txnStatus.status === 2) {
-          const executionTimeStamp = txnStatus.executionTimeStamp;
+        if (txnStatus.status == 1 || txnStatus.status === 2 || isWalletTransaction) {
+
+          const currentDate = new Date()
+          const timestamp = currentDate.getTime()
+
+          const executionTimeStamp = isWalletTransaction === true ? timestamp : txnStatus.executionTimeStamp
           let tokenUsdValue = 0;
+
           if (executionTimeStamp !== null) {
             tokenUsdValue = await getTokenUSDonDate(
               coinGeckoId[tokenName],
