@@ -49,13 +49,15 @@ export const updateTransactionStatus = async (
   let execuetedTxns: ExecutedTransactionType[] = [];
 
   for (const transfer of fundsTransfersData) {
+    console.log('-----------------------------------')
     const safeChainId = transfer.grant.workspace.safe.chainId;
     const safeAddress = transfer.grant.workspace.safe.address;
     const transactionHash = transfer.transactionHash;
     const tokenName = transfer.tokenName;
     const applicationId = transfer.application.id;
     try {
-      await sleep(1000);
+      await sleep(1000)
+      let isWalletTransaction = transactionHash.startsWith('99887341.') === true ? true : false
       // solana
       if (parseInt(safeChainId) === 900001) {
         const txnStatus = await getRealmTransactionHashStatus(
@@ -87,15 +89,19 @@ export const updateTransactionStatus = async (
         }
       }
       // ton
-      if (parseInt(safeChainId) === 512341 || parseInt(safeChainId) === 512342 || parseInt(safeChainId) === 3) {
-        let isWalletTransaction = transactionHash.startsWith('9988734.') === true
+      if (parseInt(safeChainId) === 512341 || parseInt(safeChainId) === 512342 || parseInt(safeChainId) === 3 || isWalletTransaction) {
 
-        const txnStatus = await getTONTransactionHashStatus(
-          safeChainId,
-          transactionHash,
-        );
+        console.log("ton - txnStatus", safeChainId, transactionHash);
 
-        console.log("ton - txnStatus", txnStatus, tokenName);
+        let txnStatus
+        if (!isWalletTransaction) {
+          await getTONTransactionHashStatus(
+            safeChainId,
+            transactionHash,
+          )
+        }
+        else txnStatus = { status: 1 }
+
 
         if (txnStatus.status == 1 || txnStatus.status === 2 || isWalletTransaction) {
 
@@ -104,7 +110,6 @@ export const updateTransactionStatus = async (
 
           const executionTimeStamp = isWalletTransaction === true ? timestamp : txnStatus.executionTimeStamp
           let tokenUsdValue = 0;
-
           if (executionTimeStamp !== null) {
             tokenUsdValue = await getTokenUSDonDate(
               coinGeckoId[tokenName],
