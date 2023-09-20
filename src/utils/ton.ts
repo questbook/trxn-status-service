@@ -13,9 +13,7 @@ export async function getTONTransactionHashStatus(
             variables: { queryId },
         },
     );
-
     const status = response.data.data.singleTransaction.summary.status
-
     if(status === 'SUCCESS' || status === 'CANCELLED') {
         return {
             status: status === 'CANCELLED' ? 2 : 1,

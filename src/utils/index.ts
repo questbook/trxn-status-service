@@ -95,13 +95,13 @@ export const updateTransactionStatus = async (
 
         let txnStatus
         if (!isWalletTransaction) {
+          txnStatus = 
           await getTONTransactionHashStatus(
             safeChainId,
             transactionHash,
           )
         }
         else txnStatus = { status: 1 }
-
 
         if (txnStatus.status == 1 || txnStatus.status === 2 || isWalletTransaction) {
 
