@@ -47,17 +47,26 @@ export const updateTransactionStatus = async (
 
   const fundsTransfersData = data.fundsTransfers;
   let execuetedTxns: ExecutedTransactionType[] = [];
-
+  console.log('number of pending trxns:', fundsTransfersData.length)
   for (const transfer of fundsTransfersData) {
     console.log('-----------------------------------')
-    const safeChainId = transfer.grant.workspace.safe.chainId;
-    const safeAddress = transfer.grant.workspace.safe.address;
+
     const transactionHash = transfer.transactionHash;
     const tokenName = transfer.tokenName;
     const applicationId = transfer.application.id;
+    let safeChainId
+    let safeAddress
+    let isWalletTransaction = transactionHash.startsWith('99887341.') === true ? true : false
+
+    if (!transfer.grant.workspace.safe && isWalletTransaction) {
+      safeChainId = 512342
+    }
+    else {
+      safeChainId = transfer.grant.workspace.safe.chainId;
+      safeAddress = transfer.grant.workspace.safe.address;
+    }
     try {
       await sleep(1000)
-      let isWalletTransaction = transactionHash.startsWith('99887341.') === true ? true : false
       // solana
       if (parseInt(safeChainId) === 900001) {
         const txnStatus = await getRealmTransactionHashStatus(
@@ -95,11 +104,11 @@ export const updateTransactionStatus = async (
 
         let txnStatus
         if (!isWalletTransaction) {
-          txnStatus = 
-          await getTONTransactionHashStatus(
-            safeChainId,
-            transactionHash,
-          )
+          txnStatus =
+            await getTONTransactionHashStatus(
+              safeChainId,
+              transactionHash,
+            )
         }
         else txnStatus = { status: 1 }
 
