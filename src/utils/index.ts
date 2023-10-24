@@ -100,15 +100,16 @@ export const updateTransactionStatus = async (
       // ton
       if (parseInt(safeChainId) === 512341 || parseInt(safeChainId) === 512342 || parseInt(safeChainId) === 3 || isWalletTransaction) {
 
-        console.log("ton - txnStatus", safeChainId, transactionHash);
+
 
         let txnStatus
         if (!isWalletTransaction) {
           txnStatus =
             await getTONTransactionHashStatus(
-              safeChainId,
+              safeAddress,
               transactionHash,
             )
+          console.log("ton - txnStatus----", safeAddress, transactionHash, txnStatus);
         }
         else txnStatus = { status: 1 }
 

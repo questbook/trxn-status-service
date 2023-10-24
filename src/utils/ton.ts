@@ -1,29 +1,126 @@
-import axios from 'axios'
-import { safeEndpoints, safeEndpointsTest } from './constants'
-const SAFES_ENDPOINTS = { ...safeEndpoints, ...safeEndpointsTest }
+const baseUrl = 'https://graphql.tonkey.app/graphql'
+
+async function queryTonkey(baseUrl, queryString, variables) {
+    const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: queryString,
+            variables: variables,
+        }),
+    });
+
+    if (response.status === 200) {
+        const result = await response.json();
+        if (result.error) {
+            console.log(result.error);
+            throw new Error('GraphQL API Failed');
+        }
+        return result;
+    }
+
+    return null;
+}
+
+async function getTransactionHistory(safeAddress: string) {
+    const queryString = `query TransactionHistory($chainId: String!, $safeAddress: String!) {
+      transactionHistory(chainId: $chainId, safeAddress: $safeAddress) {
+        details {
+          from
+          to
+          value
+          dataHex
+          hash
+          executedAt
+          fee
+          exitCode
+        }
+        summary {
+          createdAt
+          multiSigExecutionInfo {
+            orderCellBoc
+            queryId
+            expiredAt
+            confirmationsRequired
+            confirmationsSubmitted
+            confirmations
+            executor
+            remark
+          }
+          status
+          transactionInfo {
+            ... on Transfer {
+              transactionType
+              sender
+              recipient
+              direction
+              transferInfo {
+                ... on NativeTransferInfo {
+                  transferType
+                  value
+                }
+                ... on FTTransferInfo {
+                  transferType
+                  tokenAddress
+                  tokenName
+                  tokenSymbol
+                  logoUri
+                  decimals
+                  value
+                }
+                ... on NFTTransferInfo {
+                  transferType
+                  tokenAddress
+                  tokenName
+                  tokenSymbol
+                  logoUri
+                  tokenId
+                }
+              }
+            }
+            ... on Creation {
+              transactionType
+              creator
+            }
+            ... on Cancellation {
+              transactionType
+              isCancellation
+            }
+          }
+        }
+      }
+    }`;
+
+    const variables = {
+        chainId: '-239',
+        safeAddress: safeAddress,
+    };
+
+    const result = await queryTonkey(baseUrl, queryString, variables);
+
+    return result.data.transactionHistory;
+}
 
 export async function getTONTransactionHashStatus(
-    safeNetworkId: string,
+    safeAddress: string,
     queryId: string
 ) {
-
-    const response = await axios.post(`${SAFES_ENDPOINTS[safeNetworkId]}`, 
-        {
-            query: `query singleTransaction($queryId:String!) {  singleTransaction(queryId: $queryId) {    summary {      createdAt multiSigExecutionInfo {        orderCellBoc        queryId        expiredAt        confirmationsRequired        confirmationsSubmitted        confirmations        executor        }      status      transactionInfo {        ... on Transfer {          transactionType          sender          recipient          direction          transferInfo {            ... on NativeTransferInfo {              transferType              value              }            ... on FTTransferInfo {              transferType              tokenAddress              tokenName              tokenSymbol              logoUri              decimals              value              }            ... on NFTTransferInfo {              transferType              tokenAddress              tokenName              tokenSymbol              logoUri              tokenId              }            }          }        ... on Creation {          transactionType          creator          }        ... on Cancellation {          transactionType          isCancellation          }        }      }    details {      from      to      value      dataHex      hash      executedAt      fee      }    }}`,
-            variables: { queryId },
-        },
-    );
-    const status = response.data.data.singleTransaction.summary.status
-    if(status === 'SUCCESS' || status === 'CANCELLED') {
-        return {
-            status: status === 'CANCELLED' ? 2 : 1,
-            executionTimeStamp: response.data.data.singleTransaction.summary.createdAt,
+    console.log('new version',safeAddress)
+    const transactionsInHistory = await getTransactionHistory(safeAddress)
+    for (const transaction of transactionsInHistory) {
+        const { summary: { multiSigExecutionInfo }, details:{executedAt} } = transaction;
+        if (queryId === multiSigExecutionInfo?.queryId) {
+            return {
+                status:1,
+                executionTimeStamp: executedAt
+            }
         }
     }
-    else{
-        return {
-            status: 0,
-            executionTimeStamp: null,
-        }
+ 
+    return {
+        status:0,
+        executionTimeStamp:null
     }
 }
