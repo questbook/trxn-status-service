@@ -4,3 +4,5 @@
 export type { WorkspaceRegistry } from "./WorkspaceRegistry";
 export * as factories from "./factories";
 export { WorkspaceRegistry__factory } from "./factories/WorkspaceRegistry__factory";
+
+export { getFundsTransfers } from './getFundsTransfers'

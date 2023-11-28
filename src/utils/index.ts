@@ -12,12 +12,15 @@ import {
   getRealmTransactionHashStatus,
   getTokenUSDonDate,
 } from "../utils/realms";
-import { executeQuery } from "../utils/query";
+import { executeMutation, executeQuery,executeQueryClient } from "../utils/query";
 import {
   GetFundTransfersDocument,
   GetFundTransfersQuery,
 } from "../generated/graphql";
 import { getTONTransactionHashStatus } from "./ton";
+import { useMutation } from "@apollo/client";
+import { updateFundsTransferTransactionStatus } from "../generated/mutation";
+import { getFundsTransfers } from "../generated/contracts";
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -38,14 +41,14 @@ export const updateTransactionStatus = async (
   rpcUrl: string,
   defaultTokenName: string = "usd coin",
 ) => {
-  const data: GetFundTransfersQuery = await executeQuery(
-    chainId,
-    GetFundTransfersDocument,
+  const data = await executeQueryClient(
+    getFundsTransfers,
   );
+  console.log('data',data)
 
   if (!data) return;
 
-  const fundsTransfersData = data.fundsTransfers;
+  const fundsTransfersData = data.fundTransfers;
   let execuetedTxns: ExecutedTransactionType[] = [];
   console.log('number of pending trxns:', fundsTransfersData.length)
   for (const transfer of fundsTransfersData) {
@@ -197,6 +200,7 @@ export const updateTransactionStatus = async (
   }
 };
 
+
 export const updateStatusContractCall = async (
   chainId: SupportedChainId,
   rpcUrl: string,
@@ -204,51 +208,15 @@ export const updateStatusContractCall = async (
 ) => {
   const privateKey = process.env.WALLET_PRIVATE_KEY;
 
-  if (!privateKey) {
-    console.error("Wallet address or private key not found");
-    return;
+  
+ const variables = {
+    applicationId: execuetedTxns.map((txn) => txn.applicationId),
+    transactionHash: execuetedTxns.map((txn) => txn.transactionHash),
+    status: execuetedTxns.map((txn) => txn.status === 'SUCCESS' ? "executed" : "cancelled"),
+    tokenUSDValue: execuetedTxns.map((txn) => Math.round(txn.tokenUsdValue)),
+    executionTimestamp: execuetedTxns.map((txn) => txn.executionTimeStamp),
   }
-
-  const web3 = new Web3(rpcUrl);
-  const networkId = await web3.eth.net.getId();
-  const account = web3.eth.accounts.privateKeyToAccount(privateKey);
-  const balance = await web3.eth.getBalance(account.address);
-  const address = account.address;
-  console.log("Balance: ", web3.utils.fromWei(balance, "ether"));
-
-  const workspaceContractAddress = CHAIN_INFO[chainId].qbContracts.workspace;
-  const workspaceContract = new web3.eth.Contract(
-    WorkspaceRegistryAbi as AbiItem[],
-    workspaceContractAddress,
-  );
-
-  const trxn =
-    await workspaceContract.methods.updateFundsTransferTransactionStatus(
-      execuetedTxns.map((txn) => parseInt(txn.applicationId)),
-      execuetedTxns.map((txn) => txn.transactionHash),
-      execuetedTxns.map((txn) => txn.status === 'SUCCESS' ? "executed" : 'cancelled'),
-      execuetedTxns.map((txn) => Math.round(txn.tokenUsdValue)),
-      execuetedTxns.map((txn) => txn.executionTimeStamp),
-    );
-  console.log(trxn.arguments)
-  const gas = await trxn.estimateGas({ from: address });
-  const gasPrice = await web3.eth.getGasPrice();
-  const data = trxn.encodeABI();
-  const nonce = await web3.eth.getTransactionCount(address);
-
-  const signedTx = await web3.eth.accounts.signTransaction(
-    {
-      to: workspaceContractAddress,
-      data,
-      gas,
-      gasPrice,
-      nonce,
-      chainId: networkId,
-    },
-    privateKey,
-  );
-
-  const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-  console.log("transaction hash: ", receipt.transactionHash);
-  return receipt.transactionHash;
+  const data = await executeMutation(updateFundsTransferTransactionStatus, variables);
+  console.log('data',data)
+  return "txUpdated";
 };
