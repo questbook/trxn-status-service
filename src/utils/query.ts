@@ -31,18 +31,18 @@ import { CHAIN_INFO } from './chains';
    
 const ENDPOINT_CLIENT = 'https://vhtdi50rkl.execute-api.ap-southeast-1.amazonaws.com/graphql'
 
+const link = new HttpLink({
+  uri: ENDPOINT_CLIENT,
+  fetch,
+});
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+});
+
 async function executeQueryClient(
     query: DocumentNode,
   ) {
-    const link = new HttpLink({
-      uri: ENDPOINT_CLIENT,
-      fetch,
-    });
-    const client = new ApolloClient({
-      link,
-      cache: new InMemoryCache(),
-    });
-  
     const response = await client.query({
       query,
       fetchPolicy: 'network-only',
@@ -53,15 +53,6 @@ async function executeQueryClient(
   }
   async function executeMutation(mutation: DocumentNode, variables: any) {
     try{
-    const link = new HttpLink({
-      uri: ENDPOINT_CLIENT,
-      fetch,
-    });
-    const client = new ApolloClient({
-      link,
-      cache: new InMemoryCache(),
-    });
-  
     const response = await client.mutate({
       mutation,
       variables,
