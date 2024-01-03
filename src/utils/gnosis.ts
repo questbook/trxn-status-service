@@ -4,13 +4,12 @@ import { safeEndpoints, safeEndpointsTest } from './constants'
 const SAFES_ENDPOINTS = { ...safeEndpoints, ...safeEndpointsTest }
 
 export async function getGnosisTokenUsdValue(safeNetworkId: string, safeAddress: string, tokenName: string) {
-	const gnosisUrl = `${SAFES_ENDPOINTS[safeNetworkId]}v1/safes/${safeAddress}/balances/usd`
+	const gnosisUrl = `https://safe-client.safe.global/v1/chains/${safeNetworkId}/safes/${safeAddress}/balances/usd`
 	console.log(gnosisUrl)
 	const response = await axios.get(gnosisUrl)
-
-    const tokenDetails = response.data.filter(
-        (token) => token?.token?.symbol.toLowerCase() === tokenName
-    )
+	const tokenDetails = response.data.items.filter(
+		(token) => token?.tokenInfo?.symbol.toLowerCase() === tokenName
+	)
 	return tokenDetails.length>0? tokenDetails[0].fiatConversion : null
 
 }

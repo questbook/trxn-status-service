@@ -59,7 +59,7 @@ export const updateTransactionStatus = async (
     const applicationId = transfer.application.id;
     let safeChainId
     let safeAddress
-    let isWalletTransaction = transactionHash.startsWith('99887341.') === true ? true : false
+    let isWalletTransaction = transactionHash?.startsWith('99887341.') === true ? true : false
 
     if (!transfer.grant.workspace.safe && isWalletTransaction) {
       safeChainId = 512342

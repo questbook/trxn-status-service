@@ -29,7 +29,7 @@ import { CHAIN_INFO } from './chains';
   }
 
    
-const ENDPOINT_CLIENT = 'https://vhtdi50rkl.execute-api.ap-southeast-1.amazonaws.com/graphql'
+const ENDPOINT_CLIENT = 'https://api-grants.questbook.app/graphql'
 
 const link = new HttpLink({
   uri: ENDPOINT_CLIENT,
@@ -56,6 +56,11 @@ async function executeQueryClient(
     const response = await client.mutate({
       mutation,
       variables,
+      context: {
+        headers: {
+          'authorization': process.env.API_KEY,
+        }
+      }
     });
     const { data,errors } = response;
     console.log('data',data,'errors',errors)
