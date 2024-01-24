@@ -5161,6 +5161,7 @@ export const GetFundTransfersDocument = gql`
     tokenUSDValue
     tokenName
     status
+    createdAtS
     application {
       id
     }

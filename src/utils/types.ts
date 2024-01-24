@@ -47,5 +47,5 @@ export type ExecutedTransactionType = {
   tokenUsdValue: number;
   tokenName: string;
   executionTimeStamp: number;
-  status: 'SUCCESS' | 'CANCELLED'
+  status: 'SUCCESS' | 'CANCELLED' | 'FAILED';
 };

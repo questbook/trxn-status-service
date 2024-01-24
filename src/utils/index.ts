@@ -111,19 +111,20 @@ export const updateTransactionStatus = async (
             await getTONTransactionHashStatus(
               safeAddress,
               transactionHash,
+              transfer.createdAtS,
             )
           console.log("ton - txnStatus----", safeAddress, transactionHash, txnStatus);
         }
         else txnStatus = { status: 1 }
 
-        if (txnStatus.status == 1 || txnStatus.status === 2 || isWalletTransaction) {
+        if (txnStatus.status == 1 || txnStatus.status === 2 || txnStatus.status === 3 || isWalletTransaction) {
 
           const currentDate = new Date()
           const timestamp = currentDate.getTime()
 
           const executionTimeStamp = isWalletTransaction === true ? timestamp : txnStatus.executionTimeStamp
           let tokenUsdValue = 0;
-          if (executionTimeStamp !== null) {
+          if (executionTimeStamp !== null && txnStatus.status !== 3) {
             tokenUsdValue = await getTokenUSDonDate(
               coinGeckoId[tokenName],
               getDateInDDMMYYYY(new Date(executionTimeStamp)),
@@ -139,7 +140,7 @@ export const updateTransactionStatus = async (
             executionTimeStamp: executionTimeStamp !== null ? Math.round(
               new Date(executionTimeStamp).getTime() / 1000,
             ) : executionTimeStamp,
-            status: txnStatus.status === 1 ? 'SUCCESS' : 'CANCELLED'
+            status: txnStatus.status === 1 ? 'SUCCESS' : txnStatus.status === 2 ? 'CANCELLED' : 'FAILED'
           });
         }
       }
@@ -212,7 +213,7 @@ export const updateStatusContractCall = async (
  const variables = {
     applicationId: execuetedTxns.map((txn) => txn.applicationId),
     transactionHash: execuetedTxns.map((txn) => txn.transactionHash),
-    status: execuetedTxns.map((txn) => txn.status === 'SUCCESS' ? "executed" : "cancelled"),
+    status: execuetedTxns.map((txn) => txn.status === 'SUCCESS' ? "executed" : txn.status === 'CANCELLED' ? "cancelled" : "failed"),
     tokenUSDValue: execuetedTxns.map((txn) => Math.round(txn.tokenUsdValue)),
     executionTimestamp: execuetedTxns.map((txn) => txn.executionTimeStamp),
   }

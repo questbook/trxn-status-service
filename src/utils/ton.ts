@@ -105,7 +105,8 @@ async function getTransactionHistory(safeAddress: string) {
 
 export async function getTONTransactionHashStatus(
     safeAddress: string,
-    queryId: string
+    queryId: string,
+    createdAtS: number,
 ) {
     console.log('new version',safeAddress)
     const transactionsInHistory = await getTransactionHistory(safeAddress)
@@ -116,6 +117,14 @@ export async function getTONTransactionHashStatus(
                 status:1,
                 executionTimeStamp: executedAt
             }
+        }
+    }
+    console.log('createdAtS',createdAtS, Date.now() / 1000 - 1209600, Date.now() / 1000 - 1209600 > createdAtS)
+    // if the createdAtS is older than 2 weeks, we assume the transaction failed
+    if ((Date.now() / 1000) - 1209600 > createdAtS) {
+        return {
+            status:3,
+            executionTimeStamp: createdAtS
         }
     }
  

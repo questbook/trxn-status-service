@@ -16,13 +16,6 @@ provider:
   logRetentionInDays: 14
 
 functions:
-  goerli-testnet:
-    handler: src/chains/goerli-testnet.goerliTrxnStatus
-    timeout: 120
-    reservedConcurrency: 1
-    events:
-      - schedule: rate(10 minutes)
-
   optimism-mainnet:
     handler: src/chains/optimism-mainnet.optimismTrxnStatus
     timeout: 60

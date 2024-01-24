@@ -7,6 +7,7 @@ query GetFundTransfers {
       tokenUSDValue
       tokenName
       status
+      createdAtS
       application {
         id:_id
       }
