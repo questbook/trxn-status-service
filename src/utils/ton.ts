@@ -124,7 +124,7 @@ export async function getTONTransactionHashStatus(
     if ((Date.now() / 1000) - 1209600 > createdAtS) {
         return {
             status:3,
-            executionTimeStamp: createdAtS
+            executionTimeStamp: createdAtS * 1000
         }
     }
  
