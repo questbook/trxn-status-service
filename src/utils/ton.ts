@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch';
 const baseUrl = 'https://graphql.tonkey.app/graphql'
 
 async function queryTonkey(baseUrl, queryString, variables) {
