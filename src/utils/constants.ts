@@ -7,6 +7,8 @@ export const coinGeckoId = {
     'ton':'the-open-network',
     'TON':'the-open-network', // TON
     'the-open-network':'the-open-network', // TON
+    'STRK':'starknet',
+    'ETH': 'ethereum'
 }
 // reference: https://docs.safe.global/safe-core-api/available-services
 export const safeEndpoints = {
@@ -20,8 +22,8 @@ export const safeEndpoints = {
     "137": "https://safe-transaction-polygon.safe.global/api/",
     "42220": "https://safe-transaction-aurora.safe.global/api/",
     "4689": "https://transaction.safe.iotex.io/api/",
-    '512341': 'https://graphql.tonkey.app/graphql/' // TON mainnet
-    
+    '512341': 'https://graphql.tonkey.app/graphql/', // TON mainnet
+    '9004': 'https://starknet-sepolia.public.blastapi.io' // Starknet mainnet
 }
 
 export const safeEndpointsTest = {
@@ -30,5 +32,5 @@ export const safeEndpointsTest = {
     "73799": "https://safe-transaction.volta.gnosis.io/api/",
     "4690": "https://transaction-testnet.safe.iotex.io/api/",
     "512342": 'https://graphql.tonkey.app/graphql/', // TON testnet
-    "3": 'https://graphql.tonkey.app/graphql/' // TON testnet - dev
+    "3": 'https://graphql.tonkey.app/graphql/', // TON testnet - dev
 }

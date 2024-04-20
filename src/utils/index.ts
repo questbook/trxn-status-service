@@ -21,6 +21,7 @@ import { getTONTransactionHashStatus } from "./ton";
 import { useMutation } from "@apollo/client";
 import { updateFundsTransferTransactionStatus } from "../generated/mutation";
 import { getFundsTransfers } from "../generated/contracts";
+import { getStarknetTransactionStatus } from "./starknet";
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -141,6 +142,37 @@ export const updateTransactionStatus = async (
               new Date(executionTimeStamp).getTime() / 1000,
             ) : executionTimeStamp,
             status: txnStatus.status === 1 ? 'SUCCESS' : txnStatus.status === 2 ? 'CANCELLED' : 'FAILED'
+          });
+        }
+      }
+      // starknet
+      else if(parseInt(safeChainId) === 9004){
+        const txnStatus = await getStarknetTransactionStatus(
+          safeChainId,
+          safeAddress,
+          transactionHash,
+        );
+        console.log("txnStatus", txnStatus);
+        if (txnStatus.status == 1) {
+          const executionTimeStamp = txnStatus.executionTimeStamp;
+          let tokenUsdValue = 0;
+          if (tokenName !== null) {
+            tokenUsdValue = await getTokenUSDonDate(
+              coinGeckoId[tokenName] ? coinGeckoId[tokenName] : coinGeckoId[defaultTokenName],
+              getDateInDDMMYYYY(new Date(executionTimeStamp)),
+            );
+          }
+          console.log("tokenUsdValue-starknet", tokenUsdValue);
+
+          execuetedTxns.push({
+            applicationId,
+            transactionHash,
+            tokenUsdValue,
+            tokenName,
+            executionTimeStamp: executionTimeStamp !== null ? Math.round(
+              new Date(executionTimeStamp).getTime() / 1000,
+            ) : executionTimeStamp,
+            status: 'SUCCESS'
           });
         }
       }
