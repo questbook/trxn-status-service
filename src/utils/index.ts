@@ -64,6 +64,9 @@ export const updateTransactionStatus = async (
 
     if (!transfer.grant.workspace.safe && isWalletTransaction) {
       safeChainId = 512342
+    } else if(!transfer.grant.workspace.safe && transfer.tokenName === 'AXL'){
+      safeChainId = 42161
+      safeAddress = transactionHash
     }
     else {
       safeChainId = transfer.grant.workspace.safe.chainId;
@@ -101,6 +104,7 @@ export const updateTransactionStatus = async (
           });
         }
       }
+
       // ton
       if (parseInt(safeChainId) === 512341 || parseInt(safeChainId) === 512342 || parseInt(safeChainId) === 3 || isWalletTransaction) {
 
@@ -144,6 +148,31 @@ export const updateTransactionStatus = async (
             status: txnStatus.status === 1 ? 'SUCCESS' : txnStatus.status === 2 ? 'CANCELLED' : 'FAILED'
           });
         }
+      }
+      // Axelar
+      else if(parseInt(safeChainId) === 42161 && tokenName === 'AXL' && !transfer.grant.workspace.safe){
+        let txnStatus = { status: 1 }
+        const currentDate = new Date()
+        const timestamp = currentDate.getTime()
+
+        const executionTimeStamp = timestamp
+        let tokenUsdValue = 0;
+        if (executionTimeStamp !== null && txnStatus.status !== 3) {
+          tokenUsdValue = await getTokenUSDonDate(
+            coinGeckoId[tokenName] ?? 'axelar',
+            getDateInDDMMYYYY(new Date(executionTimeStamp)),
+          );
+        }
+        console.log("tokenUsdValue-AXL", tokenUsdValue);
+
+        execuetedTxns.push({
+          applicationId,
+          transactionHash,
+          tokenUsdValue,
+          tokenName,
+          executionTimeStamp: Math.round(timestamp / 1000),
+          status: txnStatus.status === 1 ? 'SUCCESS' : txnStatus.status === 2 ? 'CANCELLED' : 'FAILED'
+        });
       }
       // starknet
       else if(parseInt(safeChainId) === 9004){

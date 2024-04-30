@@ -8,7 +8,8 @@ export const coinGeckoId = {
     'TON':'the-open-network', // TON
     'the-open-network':'the-open-network', // TON
     'STRK':'starknet',
-    'ETH': 'ethereum'
+    'ETH': 'ethereum',
+    'AXL': 'axelar',
 }
 // reference: https://docs.safe.global/safe-core-api/available-services
 export const safeEndpoints = {
