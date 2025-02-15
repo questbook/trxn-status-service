@@ -8,6 +8,7 @@ query GetFundTransfers {
       tokenName
       status
       createdAtS
+      sender
       application {
         id:_id
       }

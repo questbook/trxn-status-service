@@ -114,7 +114,7 @@ export const updateTransactionStatus = async (
         if (!isWalletTransaction) {
           txnStatus =
             await getTONTransactionHashStatus(
-              safeAddress,
+              transfer?.sender,
               transactionHash,
               transfer.createdAtS,
             )
@@ -123,7 +123,6 @@ export const updateTransactionStatus = async (
         else txnStatus = { status: 1 }
 
         if (txnStatus.status == 1 || txnStatus.status === 2 || txnStatus.status === 3 || isWalletTransaction) {
-
           const currentDate = new Date()
           const timestamp = currentDate.getTime()
 
@@ -131,7 +130,7 @@ export const updateTransactionStatus = async (
           let tokenUsdValue = 0;
           if (executionTimeStamp !== null && txnStatus.status !== 3) {
             tokenUsdValue = await getTokenUSDonDate(
-              coinGeckoId[tokenName],
+              coinGeckoId[tokenName] ?? 'the-open-network',
               getDateInDDMMYYYY(new Date(executionTimeStamp)),
             );
           }
@@ -150,7 +149,7 @@ export const updateTransactionStatus = async (
         }
       }
       // Axelar
-      else if(parseInt(safeChainId) === 42161 && tokenName === 'AXL' && !transfer.grant.workspace.safe){
+      else if(parseInt(safeChainId) === 42161 && tokenName === 'AXL'){
         let txnStatus = { status: 1 }
         const currentDate = new Date()
         const timestamp = currentDate.getTime()
@@ -159,7 +158,7 @@ export const updateTransactionStatus = async (
         let tokenUsdValue = 0;
         if (executionTimeStamp !== null && txnStatus.status !== 3) {
           tokenUsdValue = await getTokenUSDonDate(
-            coinGeckoId[tokenName] ?? 'axelar',
+            coinGeckoId[tokenName] ? coinGeckoId[tokenName] : coinGeckoId[defaultTokenName],
             getDateInDDMMYYYY(new Date(executionTimeStamp)),
           );
         }
@@ -243,6 +242,7 @@ export const updateTransactionStatus = async (
         }
       }
     } catch (err) {
+      console.log(err)
       console.log("error", err.message, { safeChainId, safeAddress, transactionHash, tokenName, applicationId });
     }
   }
